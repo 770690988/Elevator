@@ -12,5 +12,5 @@ int absto1(int i) {
 }
 
 int cengLocation(int i) {
-	return (floor - i + 1) * cengGao;
+	return (floor - i) * cengGao;
 }

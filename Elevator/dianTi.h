@@ -21,11 +21,12 @@
 //基本架构函数
 void GotoXY(int, int);  //光标定位函数
 void Hide();     //隐藏光标函数
-void printElevator(int,int);//打印电梯主函数
+void printElevator();//打印电梯主函数
 void clearFormerElevator();//将之前的电梯去干净
 void printPlatform(); //打印平台函数
 void kaimen(int);  //开门函数
 void guanmen(int); //关门函数
+void chushihua(); //初始化相应的一些参数
 
 //附加函数
 int absto1(int); //正负转化+-1
@@ -44,3 +45,5 @@ int diantiWidth; //定义电梯宽度
 int platformWidth; //定义平台宽度
 int nowceng; //定义当前所在的楼层
 int zhuangTai; //定义当前天梯是上行1还是下行-1
+int target[6]; //定义目标楼层 1表示该楼层电梯内有乘客需要抵达
+int nowLocation; //定义当前图片所在位置即乘上cengGao的值

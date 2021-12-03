@@ -5,8 +5,7 @@ cengGao = 10; //暂定层高10
 diantiWidth = 15;  //暂定电梯宽度为15
 platformWidth = 25; //暂定平台宽度为25
 nowceng = 1; //刚开始默认楼层为1
-int shangXingButton[6];//上行电梯按钮状态1表示亮起
-int xiaXingButton[6];//下行电梯按钮状态1表示亮起
+
 
 //光标定位函数
 void GotoXY(int x, int y)
@@ -45,48 +44,83 @@ int Menu() {
     ch = _getch();
     switch (ch)
     {
-      case '1': result = 1; break;
-      case '2': result = 2; break;
-      case '0': result = 0; break;
-      default:  result = 5; break;
+    case '1': result = 1; break;
+    case '2': result = 2; break;
+    case '0': result = 0; break;
+    default:  result = 5; break;
     }
     system("cls");  //清空当前页面
     return result;
 }
 
 // 初始化一些参数，包括电梯的状态以及电梯运行的状况
-void chushihua(){
+void chushihua() {
     for (int i = 0; i <= floor; i++) {
         shangXingButton[i] = 0;
         xiaXingButton[i] = 0;
         target[i] = 0;
     }
     nowLocation = cengLocation(nowceng);
-    zhuangTai = 1; //定义刚开始的状态是上行
+    //zhuangTai = 1; //定义刚开始的状态是上行
 }
 
 //开始游戏
 int Start()
 {
     chushihua();
-    target[3] = 1;
-    shangXingButton[3] = 1;
+    chuLiButton(1, 2, 1);
+    chuLiButton(1, 3, 1);
+    chuLiButton(-1, 1, 1);
+
+    
     printPlatform();
     printElevator();
-    
+    zhuangTai = 0;
     while (1) {
-        if (shangXingButton[nowceng] == 1) {
-            kaimen(nowceng);
-            //填写人进入电梯中
-            guanmen(nowceng);
-            Sleep(200);
-            shangXingButton[nowceng] = 0;
+
+        if (shangXingButton[nowceng] == 1 || xiaXingButton[nowceng] == 1 || target[nowceng] == 1) {
+            if (target[nowceng] == 1){
+                target[nowceng] = 0;
+                chuLiButton(zhuangTai, nowceng, 0);
+                kaimen(nowceng);
+                //填写人进入电梯中
+                guanmen(nowceng);
+                Sleep(200);
+            }
+            if ( zhuangTai == 1 && shangXingButton[nowceng] == 1) {
+                chuLiButton(zhuangTai, nowceng, 0);
+                kaimen(nowceng);
+                //填写人进入电梯中
+                guanmen(nowceng);
+                Sleep(200);
+            }
+            if ( zhuangTai == -1 && xiaXingButton[nowceng] == 1) {
+                chuLiButton(zhuangTai, nowceng, 0);
+                kaimen(nowceng);
+                //填写人进入电梯中
+                guanmen(nowceng);
+                Sleep(200);
+            }
         }
+
+        if (haveshangXingButton(nowceng, floor) || havexiaXingButton(nowceng, floor) || haveTargetButton(nowceng, floor)) {
+            zhuangTai = 1;
+        }
+        else if (haveshangXingButton(1, nowceng) || havexiaXingButton(1,nowceng) || haveTargetButton(1, nowceng)) {
+            zhuangTai = -1;
+        }
+        else {
+            zhuangTai = 0;
+        }
+
         nowLocation = nowLocation - zhuangTai;
+
         if (nowLocation % cengGao == 0) {
-            nowceng = nowLocation / cengGao;
+            nowceng =  5 - (nowLocation / cengGao);
         }
-        printElevator();
+        if (zhuangTai != 0) {
+            printElevator();
+        }
        Sleep(200);
     }
 }
@@ -139,7 +173,7 @@ void printPlatform() {
 }
 
 void kaimen(int ceng) {
-    int dingweiY = (floor - ceng+1) * cengGao;
+    int dingweiY = (floor - ceng) * cengGao;//定义楼层上框
     //平台门开启
     Sleep(200);
     for (int i = 9; i > 2; i--) {
@@ -157,7 +191,7 @@ void kaimen(int ceng) {
 }
 
 void guanmen(int ceng) {
-    int dingweiY = (floor - ceng+1) * cengGao;
+    int dingweiY = (floor - ceng) * cengGao;//定义楼层上框
     
     for (int i = 1; i < 10; i++) {
         //平台门关闭

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "85f72607-c8b0-4376-bd8d-f41fc1e32dc7": {
+      "ProjectGuid": "85f72607-c8b0-4376-bd8d-f41fc1e32dc7",
+      "DisplayName": "Elevator",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

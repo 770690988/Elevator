@@ -20,7 +20,7 @@
 
 //基本架构函数
 void GotoXY(int, int);  //光标定位函数
-void Hide();     //隐藏光标函数
+void Hide();//隐藏光标函数
 void printElevator();//打印电梯主函数
 void clearFormerElevator();//将之前的电梯去干净
 void printPlatform(); //打印平台函数
@@ -31,6 +31,10 @@ void chushihua(); //初始化相应的一些参数
 //附加函数
 int absto1(int); //正负转化+-1
 int cengLocation(int); //层的定位函数
+int haveshangXingButton(int, int); //判断上行按钮在两个整数中有无1的值
+int havexiaXingButton(int, int); //判断下行按钮在两个整数中有无1的值
+int haveTargetButton(int, int); //判断电梯两个整数间有无要到达的楼层
+void chuLiButton(int, int, int); //将每个楼层按下的button进行可视化处理
 
 //模块的各个函数
 int Menu();      //主菜单函数
@@ -47,3 +51,5 @@ int nowceng; //定义当前所在的楼层
 int zhuangTai; //定义当前天梯是上行1还是下行-1
 int target[6]; //定义目标楼层 1表示该楼层电梯内有乘客需要抵达
 int nowLocation; //定义当前图片所在位置即乘上cengGao的值
+int shangXingButton[6];//上行电梯按钮状态1表示亮起
+int xiaXingButton[6];//下行电梯按钮状态1表示亮起

@@ -5,6 +5,12 @@ cengGao = 10; //暂定层高10
 diantiWidth = 15;  //暂定电梯宽度为15
 platformWidth = 25; //暂定平台宽度为25
 nowceng = 1; //刚开始默认楼层为1
+struct People {
+    int weight;
+    int positionx; //轴所在的位置
+    int nowFloor; //当前楼层
+    int targetFloor; //目标楼层
+};
 
 
 //光标定位函数

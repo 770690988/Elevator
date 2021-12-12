@@ -12,7 +12,7 @@ int absto1(int i) {
 }
 
 int cengLocation(int i) {
-	return (floor - i) * cengGao;
+	return (lowFloor - i) * cengGao;
 }
 
 //判断上行按钮在两个整数中有无1的值
@@ -48,6 +48,9 @@ int haveTargetButton(int min, int max) {
 //将每个楼层按下的button进行可视化处理
 void chuLiButton(int direction, int ceng, int data) {
 	if (direction == 1) {
+		if (shangXingButton[ceng] == data) {
+			return;
+		}
 		shangXingButton[ceng] = data;
 		Hide();
 		int y = cengLocation(ceng) + 2;
@@ -62,6 +65,9 @@ void chuLiButton(int direction, int ceng, int data) {
 		}
 	}
 	else if (direction == -1) {
+		if (xiaXingButton[ceng] == data) {
+			return;
+		}
 		xiaXingButton[ceng] = data;
 		Hide();
 

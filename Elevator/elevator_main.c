@@ -11,6 +11,9 @@ int main()
 		case 1:
 			Start();
 			break;
+		case 2:
+			setting(settingMenu());
+			break;
 		case 0:
 			flag = 0;
 			break;

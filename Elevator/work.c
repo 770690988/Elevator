@@ -18,8 +18,97 @@ typedef struct PeopleStruct {
 }People;
 
 struct PeopleList{
-    People people[10];
+    People people[100];
 }peoplelist;
+
+//游戏基本设置菜单
+int settingMenu() {
+    system("cls");
+    GotoXY(40, 5);
+    printf("1.修改楼层层数");
+    GotoXY(40, 7);
+    printf("2.修改最大人数");
+    GotoXY(40, 10);
+    printf("请输入按前面的编号进行修改，按其他任意键退出");
+   
+    char ch;
+    int result = 0;
+    ch = _getch();
+    switch (ch)
+    {
+    case '1': result = 1; break;
+    case '2': result = 2; break;
+    default:  result = 5; break;
+    }
+    system("cls");  //清空当前页面
+    return result;
+}
+
+//游戏基本设置
+int setting(option) {
+    if (option == 1) {
+        lowFloorSetting();
+    }
+    else if (option == 2) {
+        peopleNumMaxSetting();
+    }
+    else if (option == 5) {
+        return 0;
+    }
+}
+
+//楼层的设置
+int lowFloorSetting() {
+    system("cls");
+    GotoXY(40, 4);
+    printf("1.楼层数为3");
+    GotoXY(40, 6);
+    printf("2.楼层数为4");
+    GotoXY(40, 8);
+    printf("3.楼层数为5");
+    GotoXY(40, 10);
+    printf("请输入按前面的编号进行修改，按其他任意键退出");
+    
+    char ch;
+    int result = 0;
+    ch = _getch();
+    switch (ch)
+    {
+    case '1': lowFloor = 3; break;
+    case '2': lowFloor = 4; break;
+    case '3': lowFloor = 5; break;
+    default:  result = 5; break;
+    }
+    system("cls");  //清空当前页面
+    return result;
+}
+
+//人数上限设置
+int peopleNumMaxSetting() {
+    system("cls");
+    GotoXY(40, 4);
+    printf("1.人数上限为5");
+    GotoXY(40, 6);
+    printf("2.人数上限为10");
+    GotoXY(40, 8);
+    printf("3.人数上限为15");
+    GotoXY(40, 10);
+    printf("请输入按前面的编号进行修改，按其他任意键退出");
+
+    char ch;
+    int result = 0;
+    ch = _getch();
+    switch (ch)
+    {
+    case '1': peopleNumMax = 5; break;
+    case '2': peopleNumMax = 10; break;
+    case '3': peopleNumMax = 15; break;
+    default:  result = 5; break;
+    }
+    system("cls");  //清空当前页面
+    return result;
+}
+
 
 //光标定位函数
 void GotoXY(int x, int y)
@@ -47,7 +136,7 @@ int Menu() {
     GotoXY(36, 12);   //定位光标的位置
     printf(ORED"欢迎来到电梯小游戏");
     GotoXY(43, 14);
-    printf("1. 开始游戏");
+    printf("1. 开始游戏(请放大到全屏)");
     GotoXY(43, 16);
     printf("2. 设置");
     GotoXY(43, 18);
@@ -75,7 +164,7 @@ void chushihua() {
         target[i] = 0;
     }
     
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < peopleNumMax; i++) {
         peoplelist.people[i].isInUse = 0;
     }
     nowLocation = cengLocation(nowceng);
@@ -112,7 +201,7 @@ void createPeople() {
 
 void movePeople() {
     int positiony;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < peopleNumMax; i++)
     {
         //将每个需要移动的人移动一下
         if (peoplelist.people[i].In_or_Out == 0) {
@@ -157,7 +246,7 @@ int isPaiDui(int peopleNum) {
     if (peoplelist.people[peopleNum].positionx == 2 * diantiWidth + 6) {
         return 1;
     }
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < peopleNumMax; i++)
     {
         positionxi = peoplelist.people[i].positionx;
         iFloor = peoplelist.people[i].nowFloor;
@@ -173,7 +262,7 @@ int isPaiDui(int peopleNum) {
 
 // 扫描所有的人空间，寻找到最近的一个没有使用的人空间如果没有返回0
 int scanPeopleStruct() {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < peopleNumMax; i++)
     {
         if (peoplelist.people[i].isInUse == 0) {
             return i+1;
@@ -340,7 +429,7 @@ int Start()
 
 //出入电梯函数
 int InOutElevator() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < peopleNumMax; i++) {
         if (peoplelist.people[i].In_or_Out == 0 && peoplelist.people[i].nowFloor == nowceng && peoplelist.people[i].isInElevator == 0) {
             if (dianTizhuangTai == absto1(peoplelist.people[i].targetFloor - peoplelist.people[i].nowFloor)) {
                 int positiony = (lowFloor - peoplelist.people[i].nowFloor + 1) * cengGao - 1;
@@ -355,7 +444,7 @@ int InOutElevator() {
         }
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < peopleNumMax; i++) {
         if (peoplelist.people[i].isInElevator == 1 && peoplelist.people[i].targetFloor == nowceng) {
             int positiony = (lowFloor - peoplelist.people[i].nowFloor + 1) * cengGao - 1;
             peoplelist.people[i].positionx = diantiWidth * 3 + 6;

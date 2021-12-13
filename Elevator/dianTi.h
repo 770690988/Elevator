@@ -50,6 +50,10 @@ int Menu();      //主菜单函数
 
 //下面是开始游戏函数部分
 int Start();       //开始游戏
+int settingMenu();     //游戏信息设置菜单
+int setting(int);     //游戏信息设置
+int lowFloorSetting(); //楼层的设置
+int peopleNumMaxSetting(); //人数上限设置
 
 //下面是游戏中一些全局变量
 int lowFloor; //定义楼层的个数（>=2）

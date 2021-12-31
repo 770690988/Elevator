@@ -1,6 +1,6 @@
 #include "dianTi.h"
 
-lowFloor = 4; //暂定楼层为5层
+lowFloor = 4; //暂定楼层为4层
 cengGao = 10; //暂定层高10
 diantiWidth = 15;  //暂定电梯宽度为15
 platformWidth = 25; //暂定平台宽度为25
@@ -169,6 +169,9 @@ void chushihua() {
     }
     nowLocation = cengLocation(nowceng);
     //zhuangTai = 1; //定义刚开始的状态是上行
+    for (int i = 0; i < 10; i++) {
+        finish[i] = 0;
+    }
     refreshZTL();
 }
 
@@ -187,6 +190,9 @@ void createPeople() {
             int weight = (int)rand()%40 + 40;
 
             //下面就开始对数据进行赋值
+            if (finish[0] <= 1) {//任务一完成
+                finish[0]++;
+            }
             peoplelist.people[position - 1].isInUse = 1;
             peoplelist.people[position - 1].nowFloor = nowFloor;
             peoplelist.people[position - 1].targetFloor = targetFloor;
@@ -210,6 +216,9 @@ void movePeople() {
         if (isPaiDui(i)) {
             peoplelist.people[i].In_or_Out = 0;
             //人到电梯门前的按按钮处理
+            if (finish[1] <= 1) {//任务二完成
+                finish[1]++;
+            }
             chuLiButton(absto1(peoplelist.people[i].targetFloor - peoplelist.people[i].nowFloor), peoplelist.people[i].nowFloor, 1);
             refreshZTL();
         }else if (peoplelist.people[i].isInUse) {
@@ -330,6 +339,25 @@ void refreshZTL() {
         GotoXY(diantiWidth * 3 + 26, 6 + i);
         printf("前往%d楼的人数为：%d", i, countPeopleToFloorElevator(i));
     }
+
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 2);
+    printf("目标一：自动生成人。");
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 3);
+    printf("目标二：人走到电梯前自动按下上升下降按钮");
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 4);
+    printf("目标三：人进入电梯后按下电梯的按钮");
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 5);
+    printf("目标四：电梯运行到外面有按钮的楼层开门");
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 6);
+    printf("目标五：电梯运行到乘客需要到达的楼层开门");
+    GotoXY(diantiWidth * 3 + 26, 6 + lowFloor + 7);
+    printf("目标六：电梯内人数超过5人算作超载");
+    for (int i = 0; i < 6; i++) {
+        if (finish[i] == 1) {
+            GotoXY(diantiWidth * 3 + 24, 8 + lowFloor + i);
+            printf("√");
+        }
+    }
     
 
 }
@@ -393,21 +421,51 @@ int Start()
             if (shangXingButton[nowceng] == 1 || xiaXingButton[nowceng] == 1 || target[nowceng] == 1) {
                 if (target[nowceng] == 1) {
                     target[nowceng] = 0;
-                    chuLiButton(dianTizhuangTai, nowceng, 0);
+                    
+                    if (finish[4] <= 1) {//任务五完成
+                        finish[4]++;
+                    }
                     kaimen(nowceng);
-                    InOutElevator();//人进出电梯
+                    if (InOutElevator() == 1) {//人进出电梯
+                        chuLiButton(dianTizhuangTai, nowceng, 0);
+                    }
+                    else {
+                        refreshZTL();
+                        guanmen(nowceng);
+                        nowLocation = nowLocation - dianTizhuangTai;
+                    }
                     refreshZTL();
                     guanmen(nowceng);
                 }else if (dianTizhuangTai == 1 && shangXingButton[nowceng] == 1) {
-                    chuLiButton(dianTizhuangTai, nowceng, 0);
+                    if (finish[3] <= 1) {//任务四完成
+                        finish[3]++;
+                    }
+                    
                     kaimen(nowceng);
-                    InOutElevator();//人进出电梯
+                    if(InOutElevator() == 1) {//人进出电梯
+                        chuLiButton(dianTizhuangTai, nowceng, 0);
+                    }
+                    else {
+                        refreshZTL();
+                        guanmen(nowceng);
+                        nowLocation = nowLocation - dianTizhuangTai;
+                    }
                     refreshZTL();
                     guanmen(nowceng);
                 }else if (dianTizhuangTai == -1 && xiaXingButton[nowceng] == 1) {
+                    if (finish[3] <= 1) {//任务四完成
+                        finish[3]++;
+                    }
                     chuLiButton(dianTizhuangTai, nowceng, 0);
                     kaimen(nowceng);
-                    InOutElevator();//人进出电梯
+                    if (InOutElevator() == 1) {//人进出电梯
+                        chuLiButton(dianTizhuangTai, nowceng, 0);
+                    }
+                    else {
+                        refreshZTL();
+                        guanmen(nowceng);
+                        nowLocation = nowLocation - dianTizhuangTai;
+                    }
                     refreshZTL();
                     guanmen(nowceng);
                 }
@@ -422,6 +480,7 @@ int Start()
        {
            timeCount = 0;
        }
+       refreshZTL();
        Sleep(50);
 
     }
@@ -429,21 +488,6 @@ int Start()
 
 //出入电梯函数
 int InOutElevator() {
-    for (int i = 0; i < peopleNumMax; i++) {
-        if (peoplelist.people[i].In_or_Out == 0 && peoplelist.people[i].nowFloor == nowceng && peoplelist.people[i].isInElevator == 0) {
-            if (dianTizhuangTai == absto1(peoplelist.people[i].targetFloor - peoplelist.people[i].nowFloor)) {
-                int positiony = (lowFloor - peoplelist.people[i].nowFloor + 1) * cengGao - 1;
-                GotoXY(peoplelist.people[i].positionx, positiony);
-                printf(" ");
-                GotoXY(peoplelist.people[i].positionx, positiony - 1);
-                printf(" ");
-                peoplelist.people[i].positionx = 6;
-                target[peoplelist.people[i].targetFloor] = 1;
-                peoplelist.people[i].isInElevator = 1;
-            }
-        }
-    }
-
     for (int i = 0; i < peopleNumMax; i++) {
         if (peoplelist.people[i].isInElevator == 1 && peoplelist.people[i].targetFloor == nowceng) {
             int positiony = (lowFloor - peoplelist.people[i].nowFloor + 1) * cengGao - 1;
@@ -453,6 +497,36 @@ int InOutElevator() {
             peoplelist.people[i].isInElevator = 0;
         }
     }
+
+    for (int i = 0; i < peopleNumMax; i++) {
+        if (peoplelist.people[i].In_or_Out == 0 && peoplelist.people[i].nowFloor == nowceng && peoplelist.people[i].isInElevator == 0 && countPeopleInElevator() < 5) {
+            if (dianTizhuangTai == absto1(peoplelist.people[i].targetFloor - peoplelist.people[i].nowFloor)) {
+                int positiony = (lowFloor - peoplelist.people[i].nowFloor + 1) * cengGao - 1;
+                GotoXY(peoplelist.people[i].positionx, positiony);
+                printf(" ");
+                GotoXY(peoplelist.people[i].positionx, positiony - 1);
+                printf(" ");
+                peoplelist.people[i].positionx = 6;
+                target[peoplelist.people[i].targetFloor] = 1;
+                if (finish[2] <= 1) {//任务三完成
+                    finish[2]++;
+                }
+                refreshZTL();
+                peoplelist.people[i].isInElevator = 1;
+            }
+        }
+        if (countPeopleInElevator() == 5) {
+            if (finish[5] <= 1) {//任务六完成
+                finish[5]++;
+            }
+            refreshZTL();
+            return 0;//表示还有人
+            
+        }
+    }
+    return 1;//表示没有人
+
+    
 }
 
 //打印电梯主函数
@@ -505,7 +579,7 @@ void printPlatform() {
 void kaimen(int ceng) {
     int dingweiY = (lowFloor - ceng) * cengGao;//定义楼层上框
     //平台门开启
-    Sleep(200);
+    Sleep(50);
     for (int i = 9; i > 2; i--) {
         //平台门开启
         GotoXY(diantiWidth * 2 + 4, i + dingweiY);
@@ -530,7 +604,7 @@ void guanmen(int ceng) {
         //电梯门关闭
         GotoXY(diantiWidth * 2, i + dingweiY);
         printf(DGREEN"██"NONE);
-        Sleep(200);
+        Sleep(100);
         GotoXY(diantiWidth * 2 + 2, 10 + dingweiY);
         printf("  ");
     }

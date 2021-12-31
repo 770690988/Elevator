@@ -1,4 +1,6 @@
-﻿  work.c
-C:\Users\AKB0048\Desktop\vsProject\Elevator\Elevator\work.c(58): warning C4715: “setting”: 不是所有的控件路径都返回值
-C:\Users\AKB0048\Desktop\vsProject\Elevator\Elevator\work.c(456): warning C4716: “InOutElevator”: 必须返回一个值
-  Elevator.vcxproj -> C:\Users\AKB0048\Desktop\vsProject\Elevator\Debug\Elevator.exe
+﻿  addition.c
+  elevator_main.c
+  work.c
+  正在生成代码...
+C:\Users\hp\Desktop\test\elevator\Elevator1\Elevator\work.c(58): warning C4715: “setting”: 不是所有的控件路径都返回值
+  Elevator.vcxproj -> C:\Users\hp\Desktop\test\elevator\Elevator1\Debug\Elevator.exe

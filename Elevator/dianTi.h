@@ -67,3 +67,4 @@ int nowLocation; //定义当前图片所在位置即乘上cengGao的值
 int shangXingButton[6];//上行电梯按钮状态1表示亮起
 int xiaXingButton[6];//下行电梯按钮状态1表示亮起
 int peopleNumMax;  //定义人数的最大值
+int finish[10];  //定义每个事件是否完成
